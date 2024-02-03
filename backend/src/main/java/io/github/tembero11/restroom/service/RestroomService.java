@@ -1,3 +1,5 @@
+package io.github.tembero11.restroom.service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +11,9 @@ import java.util.List;
 @Service
 public class RestroomService {
     @Autowired
-    private RestroomRepository repository;
+    private RestroomRepository restroomRepository;
 
-    public List<RestroomEntity> getAllRestrooms(  ) {
-        return repository.findAll();
-    }
+    // public List<RestroomEntity> getAllRestrooms(  ) {
+    //     return repository.findAll();
+    // }
 }
-ook

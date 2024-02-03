@@ -1,5 +1,8 @@
-import org.springframework.data.jpa.repository.JpaRepository;
+package io.github.tembero11.restroom.repository;
 
-public interface RestroomRepository extends JpaRepository<Restroom, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import io.github.tembero11.restroom.model.RestroomEntity;
+
+public interface RestroomRepository extends JpaRepository<RestroomEntity, Long> {
     
 }

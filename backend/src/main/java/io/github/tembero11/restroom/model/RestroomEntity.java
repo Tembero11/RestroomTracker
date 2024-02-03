@@ -1,3 +1,5 @@
+package io.github.tembero11.restroom.model;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
