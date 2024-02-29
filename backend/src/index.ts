@@ -1,13 +1,15 @@
 import express from "express";
 import dotenv from "dotenv";
-import router from "./routes/user/services";
-import registerRoutes from "./routes/user/services";
+import * as userServices from "./routes/user/services";
+import * as user from "./routes/user/user";
 import { PrismaClient } from "@prisma/client";
+import cookieParser from "cookie-parser";
 
 // Load .env
 dotenv.config();
 
 const app = express();
+app.use(cookieParser());
 
 // ENV
 const PORT = +(process.env.PORT || 8000);
@@ -19,7 +21,9 @@ export const DISCORD_OAUTH_CLIENT_ID = process.env.DISCORD_OAUTH_CLIENT_ID as st
 export const prisma = new PrismaClient();
 
 async function startServer(port: number) {
-    registerRoutes(app);
+    user.registerRoutes(app);
+    userServices.registerRoutes(app);
+    
     app.listen(port, () => console.log("Server started successfully! 🎉"));   
 }
 

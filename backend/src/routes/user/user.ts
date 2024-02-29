@@ -1,13 +1,21 @@
-import { Router } from "express";
-import { deleteController, getController, patchController, postController } from "../../controller/user/user";
+import { Router, Express } from "express";
+import {
+  deleteController,
+  getController,
+  patchController,
+  postController,
+} from "../../controller/user/user";
+import verifyAuth from "../../middleware/verifyAuth";
 
-export const route = "/account";
+export const route = "/user";
 
 const router = Router();
 
-router.get(route, getController);
-router.post(route, postController);
-router.patch(route, patchController);
-router.delete(route, deleteController);
+export function registerRoutes(app: Express) {
+  router.get(route, verifyAuth, getController);
+  router.post(route, verifyAuth, postController);
+  router.patch(route, verifyAuth, patchController);
+  router.delete(route, verifyAuth, deleteController);
 
-export default router;
+  app.use(router);
+}

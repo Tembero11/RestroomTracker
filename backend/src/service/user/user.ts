@@ -47,13 +47,19 @@ export async function upsertService(
 }
 
 export async function findUserByEmail(email: string) {
-    return await prisma.user.findFirst({
-      where: { email },
-      select: { id: true, services: true },
-    });
+  return await prisma.user.findFirst({
+    where: { email },
+    select: { id: true, services: true },
+  });
 }
 
-const PRIVATE_KEY = fs.readFileSync(path.join(process.cwd(), "security", "jwtRS256.key"));
+export async function findUserById(id: bigint) {
+  return await prisma.user.findFirst({ where: { id } });
+}
+
+const PRIVATE_KEY = fs.readFileSync(
+  path.join(process.cwd(), "security", "jwtRS256.key")
+);
 
 export interface ITokenPayload {
   id: string;
@@ -68,8 +74,25 @@ export function signToken(payload: ITokenPayload): Promise<string> {
       { algorithm: "RS256", expiresIn: "30d", issuer: "RestroomTracker" },
       function (err, token) {
         if (!err && token) {
-            resolve(token);
-            return;
+          resolve(token);
+          return;
+        }
+        reject(err);
+      }
+    );
+  });
+}
+
+export async function verifyToken(token: string): Promise<ITokenPayload> {
+  return new Promise((resolve, reject) => {
+    jwt.verify(
+      token,
+      PRIVATE_KEY,
+      { algorithms: ["RS256"], issuer: "RestroomTracker" },
+      function (err, decoded) {
+        if (!err && decoded) {
+          resolve(decoded as ITokenPayload);
+          return;
         }
         reject(err);
       }

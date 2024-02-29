@@ -8,7 +8,7 @@ export const route = "/oauth2/discord";
 
 const router = Router();
 
-export default function registerRoutes(app: Express) {
+export function registerRoutes(app: Express) {
     router.get(route, oAuthCallback({
         clientId: DISCORD_OAUTH_CLIENT_ID,
         clientSecret: DISCORD_OAUTH_CLIENT_SECRET,
