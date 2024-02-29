@@ -9,6 +9,7 @@ import ErrorPage from "./error-page";
 import "./styles/theme.scss";
 import IndexPage from "./routes";
 import LoginPage from "./routes/login";
+import { CompleteAccountPage } from "./routes/account/complete";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginPage/>
+      },
+      {
+        path: "/account/complete",
+        element: <CompleteAccountPage/>
       }
     ]
   },
