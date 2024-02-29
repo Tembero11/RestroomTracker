@@ -1,10 +1,11 @@
 import { $Enums } from "@prisma/client";
 import { prisma } from "../..";
+import { genSnowflake } from "../../util/snowflake";
 
 export async function createUser(username: string, email: string, refreshToken: string, service: $Enums.OAuthService) {
     await prisma.user.create({
         data: {
-            id: Math.floor(Math.random() * 100),
+            id: genSnowflake(),
             username,
             email,
             services: {
