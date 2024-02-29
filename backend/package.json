@@ -9,8 +9,10 @@
   "author": "Tembero11",
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^5.10.2",
     "dotenv": "^16.4.5",
     "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -20,5 +22,8 @@
     "prisma": "^5.10.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=21.0.0"
   }
 }
