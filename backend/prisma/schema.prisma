@@ -23,6 +23,7 @@ model User {
   services UserService[]
   username String @unique
   email String @unique
+  isComplete Boolean @default(false)
   lastLogin DateTime @default(now())
 }
 
