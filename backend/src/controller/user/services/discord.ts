@@ -1,14 +1,18 @@
 import { Request, Response } from "express";
 import { getDiscordUser } from "../../../service/user/services/discord";
-import { createUser } from "../../../service/user/user";
+import { createUser, signToken } from "../../../service/user/user";
 import { $Enums } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { genSnowflake } from "../../../util/snowflake";
 
 export async function getController(req: Request, res: Response) {
   const discordUser = await getDiscordUser(req.oAuth!.accessToken);
 
+  const snowflake = genSnowflake();
+
   try {
     await createUser(
+      snowflake,
       discordUser.username,
       discordUser.email,
       req.oAuth!.refreshToken,
@@ -27,4 +31,13 @@ export async function getController(req: Request, res: Response) {
     }
     return;
   }
+
+
+  const token = await signToken({
+    id: snowflake.toString(),
+    email: discordUser.email,
+  });
+
+
+  res.status(201).cookie("Authorization", `Bearer ${token}`);
 }
