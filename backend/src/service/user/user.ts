@@ -28,6 +28,14 @@ export async function createUser(
   });
 }
 
+export async function modifyUser(id: bigint, newUsername: string) {
+  await prisma.user.update({
+    where: { id },
+    // If you have confirmed the username your profile is complete
+    data: { username: newUsername, isComplete: true },
+  });
+}
+
 export async function upsertService(
   userId: bigint,
   refreshToken: string,
