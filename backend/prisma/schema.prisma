@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Sex {
+  WOMEN
+  MEN
+  BOTH
+}
+
+enum OAuthService {
+  GOOGLE
+  DISCORD
+}
+
+model User {
+  id BigInt @id
+  services UserService[]
+  username String @unique
+  email String @unique
+  lastLogin DateTime @default(now())
+}
+
+model UserService {
+  id BigInt @id
+  service OAuthService
+  refreshToken String
+  user User @relation(fields: [id], references: [id])
+}
+
+// model RestroomLocation {
+//   id Int @id
+//   lat Decimal @db.Decimal(6, 3)
+//   lon Decimal @db.Decimal(6, 3)
+
+//   @@map("restroom_locations")
+// }
+
+// model Restroom {
+//   id Int @id
+//   fee Decimal?
+//   sex Sex?
+//   accessible Boolean?
+//   code      String
+//   @@map("restrooms")
+
+// }
+
+// model RestroomRating {
+//   id Int @id
+
+//   @@map("restroom_ratings")
+// }
