@@ -22,8 +22,8 @@ export async function getController(req: Request, res: Response) {
         return;
     }
 
-    if (err.code == "P2002") {
-        // TODO: handler user login case
+    if (err.code == "P2002" && err.meta?.target == "User_email_key") {
+        // TODO: Should login instead
     }
     return;
   }
