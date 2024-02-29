@@ -28,18 +28,29 @@ export async function createUser(
   });
 }
 
-export async function createService(
+export async function upsertService(
   userId: bigint,
   refreshToken: string,
   service: $Enums.OAuthService
 ) {
-  await prisma.userService.create({
-    data: {
+  await prisma.userService.upsert({
+    where: { id: userId },
+    update: {
+      refreshToken,
+    },
+    create: {
       id: userId,
       service,
       refreshToken,
     },
   });
+}
+
+export async function findUserByEmail(email: string) {
+    return await prisma.user.findFirst({
+      where: { email },
+      select: { id: true, services: true },
+    });
 }
 
 const PRIVATE_KEY = fs.readFileSync(path.join(process.cwd(), "security", "jwtRS256.key"));
