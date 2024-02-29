@@ -55,5 +55,7 @@ export async function getController(req: Request, res: Response) {
     email: discordUser.email,
   });
 
-  res.status(201).cookie("Authorization", `Bearer ${token}`).redirect("/");
+  res.status(201).cookie("Authorization", `Bearer ${token}`, {
+    httpOnly: true,
+  }).redirect("/");
 }
