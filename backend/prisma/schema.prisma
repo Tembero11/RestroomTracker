@@ -21,7 +21,7 @@ enum OAuthService {
 model User {
   id BigInt @id
   services UserService[]
-  username String @unique
+  username String
   email String @unique
   isComplete Boolean @default(false)
   lastLogin DateTime @default(now())
