@@ -9,6 +9,7 @@ import Root from "./routes/root";
 import ErrorPage from "./error-page";
 import "./styles/theme.scss";
 import IndexPage from "./routes";
+import LoginPage from "./routes/login";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <IndexPage/>
+      },
+      {
+        path: "/login",
+        element: <LoginPage/>
       }
     ]
   },
