@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import useApi from "../../hooks/useApi";
-import { completeProfile, getUser } from "../../requests/user";
+import { completeProfile } from "../../requests/user";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 export function CompleteAccountPage() {
   const [username, setUsername] = useState("");
-  const [user, isLoading, error] = useApi(getUser);
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => setUsername(user?.username || ""), [user?.username]);
@@ -21,15 +21,11 @@ export function CompleteAccountPage() {
     <form onSubmit={onSubmit}>
       <label>
         <span>Username</span>
-        {isLoading ? (
-          <></>
-        ) : (
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        )}
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
       </label>
       <button type="submit">Finish</button>
     </form>
