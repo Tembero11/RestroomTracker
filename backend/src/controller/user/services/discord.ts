@@ -57,5 +57,5 @@ export async function getController(req: Request, res: Response) {
 
   res.status(201).cookie("Authorization", `Bearer ${token}`, {
     httpOnly: true,
-  }).redirect("/");
+  }).redirect(`http://localhost:5173/account/complete`);
 }
