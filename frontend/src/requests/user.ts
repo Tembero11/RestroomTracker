@@ -26,3 +26,19 @@ export async function getUser(): Promise<IUser> {
     lastLogin: new Date(body.lastLogin),
   }
 }
+
+export async function completeProfile(username: string) {
+  const url = `/api/user`;
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({username})
+  });
+
+  if (!res.ok) {
+    throw new Error("Unknown Error");
+  }
+}
