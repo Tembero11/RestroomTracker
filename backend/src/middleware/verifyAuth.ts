@@ -22,6 +22,7 @@ async function verifyAuth(req: Request, res: Response, next: NextFunction) {
         }
         req.context = user;
         next();
+        return;
     } catch (err) {
         console.log(err);
     }
