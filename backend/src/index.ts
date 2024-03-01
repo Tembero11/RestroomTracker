@@ -4,12 +4,16 @@ import * as userServices from "./routes/user/services";
 import * as user from "./routes/user/user";
 import { PrismaClient } from "@prisma/client";
 import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 
 // Load .env
 dotenv.config();
 
 const app = express();
+
+// Middlewares
 app.use(cookieParser());
+app.use(bodyParser.json());
 
 // ENV
 const PORT = +(process.env.PORT || 8000);
