@@ -10,6 +10,8 @@ import "./styles/theme.scss";
 import IndexPage from "./routes";
 import LoginPage from "./routes/login";
 import { CompleteAccountPage } from "./routes/account/complete";
+import { AuthProvider } from "./contexts/AuthContext/AuthContext";
+import Private from "./components/Private/Private";
 
 const router = createBrowserRouter([
   {
@@ -27,7 +29,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/account/complete",
-        element: <CompleteAccountPage/>
+        element: <Private><CompleteAccountPage/></Private>
       }
     ]
   },
@@ -35,6 +37,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
