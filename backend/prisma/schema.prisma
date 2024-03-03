@@ -34,23 +34,19 @@ model UserService {
   user User @relation(fields: [id], references: [id])
 }
 
-// model RestroomLocation {
-//   id Int @id
-//   lat Decimal @db.Decimal(6, 3)
-//   lon Decimal @db.Decimal(6, 3)
+model Restroom {
+  id         BigInt @id
+  name       String
+  fee        Decimal?
+  sex        Sex
+  accessible Boolean?
+  code       String?
+  notes      String
 
-//   @@map("restroom_locations")
-// }
-
-// model Restroom {
-//   id Int @id
-//   fee Decimal?
-//   sex Sex?
-//   accessible Boolean?
-//   code      String
-//   @@map("restrooms")
-
-// }
+  lat       Decimal
+  lng       Decimal
+  @@map("restrooms")
+}
 
 // model RestroomRating {
 //   id Int @id
