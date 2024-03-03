@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import * as userServices from "./routes/user/services";
 import * as user from "./routes/user/user";
+import * as restroom from "./routes/restroom";
 import { PrismaClient } from "@prisma/client";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
@@ -27,6 +28,7 @@ export const prisma = new PrismaClient();
 async function startServer(port: number) {
     user.registerRoutes(app);
     userServices.registerRoutes(app);
+    restroom.registerRoutes(app);
     
     app.listen(port, () => console.log("Server started successfully! 🎉"));   
 }

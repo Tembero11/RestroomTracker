@@ -1,13 +1,24 @@
-import { Router } from "express";
-import { deleteController, getController, patchController, postController } from "../controller/restroom";
+import { Router, Express } from "express";
+import {
+  deleteController,
+  getController,
+  patchController,
+  postController,
+} from "../controller/restroom";
+import { verifyToken } from "../service/user/user";
+import validate from "../middleware/validate";
+import postSchema from "../schema/restroom";
+import expressAsyncHandler from "express-async-handler";
 
 export const route = "/restroom";
 
 const router = Router();
 
-router.get(route, getController);
-router.post(route, postController);
-router.patch(route, patchController);
-router.delete(route, deleteController);
+export function registerRoutes(app: Express) {
+  router.get(route, getController);
+  router.post(route, verifyToken, validate(postSchema), expressAsyncHandler(postController));
+  router.patch(route, verifyToken, patchController);
+  router.delete(route, verifyToken, deleteController);
 
-export default router;
+  app.use(router);
+}
