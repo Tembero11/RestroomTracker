@@ -1,18 +1,25 @@
 import { $Enums } from "@prisma/client";
 import { z } from "zod";
 
-const postSchema = {
-    body: z.object({
-        name: z.string().min(2).max(32),
-        sex: z.nativeEnum($Enums.Sex),
-        fee: z.number().nullable(),
-        code: z.string().min(2).max(8).nullable(),
-        accessible: z.boolean().nullable(),
-        notes: z.string(),
+export const getSchema = {
+  query: z.object({
+    minLat: z.coerce.number(),
+    minLng: z.coerce.number(),
+    maxLat: z.coerce.number(),
+    maxLng: z.coerce.number(),
+  }),
+};
 
-        lat: z.number(),
-        lng: z.number(),
-    }),
-}
+export const postSchema = {
+  body: z.object({
+    name: z.string().min(2).max(32),
+    sex: z.nativeEnum($Enums.Sex),
+    fee: z.number().nullable(),
+    code: z.string().min(2).max(8).nullable(),
+    accessible: z.boolean().nullable(),
+    notes: z.string(),
 
-export default postSchema;
+    lat: z.number(),
+    lng: z.number(),
+  }),
+};

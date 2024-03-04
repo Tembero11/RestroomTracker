@@ -15,3 +15,19 @@ export async function createRestroom(restroom: Omit<Restroom, "id" | "lat" | "ln
     },
   });
 }
+
+
+export async function getRestroomsByLocation(minLat: number, minLng: number, maxLat: number, maxLng: number) {
+  return await prisma.restroom.findMany({
+    where: {
+      lat: {
+        gt: minLat,
+        lt: maxLat,
+      },
+      lng: {
+        gt: minLng,
+        lt: maxLng,
+      }
+    }
+  });
+}
