@@ -34,11 +34,11 @@ export default function MapView() {
         urlParams.set("maxLat", maxLat.toFixed(6));
         urlParams.set("maxLng", maxLng.toFixed(6));
 
-        const url = `/restroom?${urlParams}`;
+        const url = `/api/restroom?${urlParams}`;
         console.log(url);
-        // fetch(url, {
-        //   method: "get",
-        // });
+        fetch(url, {
+          method: "get",
+        }).then((res) => res.json());
       },
       1500
     );
