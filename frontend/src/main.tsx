@@ -12,6 +12,7 @@ import LoginPage from "./routes/login";
 import { CompleteAccountPage } from "./routes/account/complete";
 import { AuthProvider } from "./contexts/AuthContext/AuthContext";
 import Private from "./components/Private/Private";
+import NewPage from "./routes/new";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/account/complete",
         element: <Private><CompleteAccountPage/></Private>
+      },
+      {
+        path: "/new",
+        element: <Private><NewPage/></Private>
       }
     ]
   },

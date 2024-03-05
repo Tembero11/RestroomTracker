@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import MapView from "../components/MapView/MapView";
 import { AuthStatus } from "../contexts/AuthContext/AuthContext";
 import useAuth from "../hooks/useAuth";
@@ -12,9 +13,9 @@ export default function IndexPage() {
       <div className={styles["map-top-overlay"]}>
         <input type="search" />
         {auth.status == AuthStatus.authenticated ? (
-          <button>New</button>
+          <Link to="/new"><button>New</button></Link>
         ) : (
-          <button>Login</button>
+          <Link to="/login"><button>Login</button></Link>
         )}
       </div>
     </div>

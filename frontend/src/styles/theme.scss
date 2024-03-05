@@ -1,5 +1,5 @@
 :root {
-    --primary: red;
+    --primary: yellow;
     --on-primary: black;
     --background: white;
     --on-background: black;
@@ -13,4 +13,20 @@ body {
 
 main {
     width: 100vw;
+}
+
+button {
+    cursor: pointer;
+
+    height: 44px;
+    padding: 24px 0;
+
+    &[data-size=small] {
+        height: 32px;
+        padding: 16px 0;
+    }
+    &[data-size=large] {
+        height: 52px;
+        padding: 32px 0;
+    }
 }
