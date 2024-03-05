@@ -1,24 +1,16 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import { getSchema, postSchema } from "../schema/restroom";
-import { createRestroom, getRestroomsByLocation } from "../service/restroom";
+import { postSchema } from "../schema/restroom";
+import { createRestroom, getRestrooms, restroomsToGeoJson } from "../service/restroom";
 import { Decimal } from "@prisma/client/runtime/library";
 
 export async function getController(req: Request, res: Response) {
-  const { minLat, minLng, maxLat, maxLng } = req.query as unknown as z.infer<
-    typeof getSchema.query
-  >;
-
   try {
-    const restrooms = await getRestroomsByLocation(
-      minLat,
-      minLng,
-      maxLat,
-      maxLng
-    );
+    const restrooms = await getRestrooms();
 
-    res.status(200).json(restrooms);
+    res.status(200).json(restroomsToGeoJson(restrooms));
   } catch (err) {
+    console.log(err)
     res.status(500).json({ msg: "Internal Server Error" });
     return;
   }

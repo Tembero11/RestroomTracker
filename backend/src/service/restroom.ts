@@ -17,17 +17,26 @@ export async function createRestroom(restroom: Omit<Restroom, "id" | "lat" | "ln
 }
 
 
-export async function getRestroomsByLocation(minLat: number, minLng: number, maxLat: number, maxLng: number) {
-  return await prisma.restroom.findMany({
-    where: {
-      lat: {
-        gt: minLat,
-        lt: maxLat,
+export async function getRestrooms() {
+  return await prisma.restroom.findMany();
+}
+
+export function restroomsToGeoJson(restrooms: Restroom[]): object {
+  const features = restrooms.map((restroom) => {
+    return {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [restroom.lng.toNumber(), restroom.lat.toNumber()]
       },
-      lng: {
-        gt: minLng,
-        lt: maxLng,
+      properties: {
+        id: restroom.id.toString(),
       }
     }
   });
+
+  return {
+    type: "FeatureCollection",
+    features
+  };
 }
