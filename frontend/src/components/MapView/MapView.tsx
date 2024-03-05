@@ -9,11 +9,10 @@ export default function MapView() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-
   const mapContainer = useRef(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const [lng, setLng] = useState(-70.9);
-  const [lat, setLat] = useState(42.35);
+  const [lng, setLng] = useState(22.264824);
+  const [lat, setLat] = useState(60.45451);
   const [zoom, setZoom] = useState(9);
 
   useEffect(() => {
@@ -26,42 +25,39 @@ export default function MapView() {
       zoom: zoom,
     });
 
-    const getGeoJson = throttle(
-      (minLat: number, minLng: number, maxLat: number, maxLng: number) => {
-        const urlParams = new URLSearchParams();
-        urlParams.set("minLat", minLat.toFixed(6));
-        urlParams.set("minLng", minLng.toFixed(6));
-        urlParams.set("maxLat", maxLat.toFixed(6));
-        urlParams.set("maxLng", maxLng.toFixed(6));
-
-        const url = `/api/restroom?${urlParams}`;
-        console.log(url);
-        fetch(url, {
-          method: "get",
-        }).then((res) => res.json());
-      },
-      1500
-    );
-
     const setLatLngQueryParams = throttle((lat: number, lng: number) => {
       const urlParams = new URLSearchParams();
       urlParams.set("lat", lat.toFixed(6));
       urlParams.set("lng", lng.toFixed(6));
-      
+
       setSearchParams(urlParams);
     }, 500);
 
     map.current.on("move", () => {
       const { lat, lng } = map.current!.getCenter();
-      const mapBounds = map.current!.getBounds();
-      const { lat: minLat, lng: minLng } = mapBounds.getNorthWest();
-      const { lat: maxLat, lng: maxLng } = mapBounds.getSouthEast();
-      getGeoJson(minLat, minLng, maxLat, maxLng);
       setLatLngQueryParams(lat, lng);
 
       setLng(lng);
       setLat(lat);
       setZoom(map.current!.getZoom());
+    });
+
+    map.current.on("load", () => {
+      map.current!.addSource("restrooms", {
+        type: "geojson",
+        data: "/api/restroom",
+      });
+      map.current!.addLayer({
+        id: "restrooms-layer",
+        type: "circle",
+        source: "restrooms",
+        paint: {
+          "circle-radius": 4,
+          "circle-stroke-width": 2,
+          "circle-color": "red",
+          "circle-stroke-color": "white",
+        },
+      });
     });
   });
 
@@ -71,7 +67,6 @@ export default function MapView() {
     </div>
   );
 }
-
 
 function throttle(callback: (...args: any[]) => void, delay = 1000) {
   let shouldWait = false;
