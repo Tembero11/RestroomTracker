@@ -33,6 +33,9 @@ export async function postController(req: Request, res: Response) {
       lat,
       lng
     );
+
+    res.status(201).send();
+    return;
   } catch (err) {
     res.status(500).json({ msg: "Internal Server Error" });
     return;
