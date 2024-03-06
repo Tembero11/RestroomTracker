@@ -5,10 +5,10 @@ import {
   patchController,
   postController,
 } from "../controller/restroom";
-import { verifyToken } from "../service/user/user";
 import validate from "../middleware/validate";
 import { postSchema } from "../schema/restroom";
 import expressAsyncHandler from "express-async-handler";
+import verifyAuth from "../middleware/verifyAuth";
 
 export const route = "/restroom";
 
@@ -16,9 +16,9 @@ const router = Router();
 
 export function registerRoutes(app: Express) {
   router.get(route, expressAsyncHandler(getController));
-  router.post(route, verifyToken, validate(postSchema), expressAsyncHandler(postController));
-  router.patch(route, verifyToken, patchController);
-  router.delete(route, verifyToken, deleteController);
+  router.post(route, verifyAuth, validate(postSchema), expressAsyncHandler(postController));
+  router.patch(route, verifyAuth, patchController);
+  router.delete(route, verifyAuth, deleteController);
 
   app.use(router);
 }
