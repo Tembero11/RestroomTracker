@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "../styles/routes/new.module.scss";
 import { z } from "zod";
 import { useState } from "react";
+import MapView from "../components/MapView/MapView";
 
 enum Sex {
   Men = "MEN",
@@ -31,6 +32,7 @@ type ValidationSchemaType = z.infer<typeof schema>;
 export default function NewPage() {
   const [isSubmitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [coords, setCoords] = useState<{lat: number, lng: number}>();
 
   const {
     register,
@@ -45,7 +47,13 @@ export default function NewPage() {
     setSubmitting(true);
     fetch("/api/restroom", {
       method: "post",
-      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        ...coords
+      }),
     })
       .catch((err) => {
         console.log(err);
@@ -86,6 +94,10 @@ export default function NewPage() {
           value={isSubmitting ? "Creating..." : "Create"}
         />
       </form>
+      <div className={styles["map-container"]}>
+        <MapView onMove={(lat, lng) => setCoords({lat, lng})}/>
+        <div className={styles["center-marker"]}></div>
+      </div>
     </div>
   );
 }

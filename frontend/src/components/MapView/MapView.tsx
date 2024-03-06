@@ -4,7 +4,13 @@ import styles from "./MapView.module.scss";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useSearchParams } from "react-router-dom";
 
-export default function MapView() {
+interface IProps {
+  loadGeoJSON?: boolean;
+  updateQueryParams?: boolean;
+  onMove?: (centerLat: number, centerLng: number) => void;
+}
+
+export default function MapView({ loadGeoJSON, updateQueryParams, onMove }: IProps) {
   const token = (import.meta as any).env.VITE_MAPBOX_ACCESS_TOKEN;
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +32,7 @@ export default function MapView() {
     });
 
     const setLatLngQueryParams = throttle((lat: number, lng: number) => {
+      if (!updateQueryParams) return;
       const urlParams = new URLSearchParams();
       urlParams.set("lat", lat.toFixed(6));
       urlParams.set("lng", lng.toFixed(6));
@@ -35,6 +42,9 @@ export default function MapView() {
 
     map.current.on("move", () => {
       const { lat, lng } = map.current!.getCenter();
+      
+      if (onMove) onMove(lat, lng);
+
       setLatLngQueryParams(lat, lng);
 
       setLng(lng);
@@ -43,6 +53,8 @@ export default function MapView() {
     });
 
     map.current.on("load", () => {
+      if (!loadGeoJSON) return;
+
       map.current!.addSource("restrooms", {
         type: "geojson",
         data: "/api/restroom",
@@ -62,9 +74,7 @@ export default function MapView() {
   });
 
   return (
-    <div>
-      <div ref={mapContainer} className={styles["map-container"]} />
-    </div>
+    <div ref={mapContainer} className={styles["map-container"]} />
   );
 }
 

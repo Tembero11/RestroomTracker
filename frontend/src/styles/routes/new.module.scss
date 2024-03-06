@@ -1,9 +1,10 @@
 .container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: 100vh;
 }
 
 .form-container {
@@ -13,4 +14,21 @@
     align-items: stretch;
     gap: 8px;
     width: 70%;
+}
+
+.map-container {
+    position: relative;
+    flex: 1;
+    width: 100%;
+}
+
+.center-marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background-color: red;
+    z-index: 1;
 }

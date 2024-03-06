@@ -8,7 +8,7 @@ export default function IndexPage() {
   const auth = useAuth();
 
   return (
-    <div>
+    <div style={{height: "100vh"}}>
       <MapView />
       <div className={styles["map-top-overlay"]}>
         <input type="search" />
