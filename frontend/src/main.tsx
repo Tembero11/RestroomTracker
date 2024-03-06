@@ -13,6 +13,7 @@ import { CompleteAccountPage } from "./routes/account/complete";
 import { AuthProvider } from "./contexts/AuthContext/AuthContext";
 import Private from "./components/Private/Private";
 import NewPage from "./routes/new";
+import ProfilePage from "./routes/account/profile";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/account/complete",
         element: <Private><CompleteAccountPage/></Private>
+      },
+      {
+        path: "/account/profile",
+        element: <Private><ProfilePage/></Private>
       },
       {
         path: "/new",
