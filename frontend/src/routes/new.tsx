@@ -4,6 +4,8 @@ import styles from "../styles/routes/new.module.scss";
 import { z } from "zod";
 import { useState } from "react";
 import MapView from "../components/MapView/MapView";
+import { Alert, Button, Checkbox, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
 enum Sex {
   Men = "MEN",
@@ -71,28 +73,33 @@ export default function NewPage() {
         onSubmit={handleSubmit(onSubmit)}
         className={styles["form-container"]}
       >
-        <input type="text" placeholder="Restroom Name" {...register("name")} />
+        <TextField type="text" label="Restroom Name" {...register("name")} />
         {errors.name && <span>{errors.name!.message}</span>}
-        <input type="number" placeholder="Fee" {...register("fee")} />
-        {errors.fee && <span>{errors.fee!.message}</span>}
+        <TextField type="number" label="Fee" {...register("fee")} />
+        {errors.fee && <Alert severity="error">{errors.fee.message}</Alert>}
         <label>
           <span>Is this restroom accessible?</span>
           <input type="checkbox" {...register("accessible")} />
         </label>
-        <select {...register("sex")}>
-          <option value={Sex.Men}>Men</option>
-          <option value={Sex.Women}>Women</option>
-          <option value={Sex.Both}>Both</option>
-        </select>
-        <input type="text" placeholder="Code" {...register("code")} />
-        {errors.code && <span>{errors.code!.message}</span>}
-        <textarea placeholder="Notes" {...register("notes")}></textarea>
-        {errors.notes && <span>{errors.notes!.message}</span>}
-        <input
-          type="submit"
-          data-size="large"
-          value={isSubmitting ? "Creating..." : "Create"}
-        />
+        <Checkbox/>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Sex"
+            {...register("sex")}
+          >
+            <MenuItem value={Sex.Both}>Both</MenuItem>
+            <MenuItem value={Sex.Men}>Men</MenuItem>
+            <MenuItem value={Sex.Women}>Women</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField type="text" label="Code" {...register("code")} />
+        {errors.code && <Alert severity="error">{errors.code.message}</Alert>}
+        <TextField multiline label="Notes" {...register("notes")}></TextField>
+        {errors.notes && <Alert severity="error">{errors.notes.message}</Alert>}
+        <Button type="submit" variant="contained"><Add/>Create</Button>
       </form>
       <div className={styles["map-container"]}>
         <MapView onMove={(lat, lng) => setCoords({lat, lng})}/>

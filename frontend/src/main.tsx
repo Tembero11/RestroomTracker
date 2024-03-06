@@ -15,6 +15,14 @@ import Private from "./components/Private/Private";
 import NewPage from "./routes/new";
 import ProfilePage from "./routes/account/profile";
 
+// Import fonts
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
+
+
 const router = createBrowserRouter([
   {
     path: "/",

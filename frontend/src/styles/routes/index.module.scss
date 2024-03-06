@@ -12,3 +12,17 @@
 
     background: linear-gradient(rgba(0, 0, 0, 0.15), transparent);
 }
+
+.map-bottom-overlay {
+    $map-attribution-height: 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 8px;
+    position: absolute;
+    right: 16px;
+    bottom: calc(16px + $map-attribution-height);
+    z-index: 100;
+}

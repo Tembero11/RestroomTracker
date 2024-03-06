@@ -1,11 +1,10 @@
-:root {
-    --primary: yellow;
-    --on-primary: black;
-    --background: white;
-    --on-background: black;
-    --surface: white;
-    --on-surface: black;
-}
+$primary: rgb(243, 223, 0);
+$on-primary: rgb(0, 0, 0);
+$secondary: rgb(255, 252, 228);
+$on-secondary: rgb(0, 0, 0);
+$background: rgb(254, 255, 249);
+$on-background: rgb(9, 11, 2);
+$font-family: "Inter", sans-serif;
 
 body {
     margin: 0;
@@ -15,18 +14,9 @@ main {
     width: 100vw;
 }
 
-button {
-    cursor: pointer;
-
-    height: 44px;
-    padding: 24px 0;
-
-    &[data-size=small] {
-        height: 32px;
-        padding: 16px 0;
-    }
-    &[data-size=large] {
-        height: 52px;
-        padding: 32px 0;
-    }
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance:none;
 }
