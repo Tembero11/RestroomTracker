@@ -6,7 +6,7 @@ import { Decimal } from "@prisma/client/runtime/library";
 export async function createRestroom(restroom: Omit<Restroom, "id" | "lat" | "lng">, lat: number, lng: number) {
   const snowflake = genSnowflake();
 
-  prisma.restroom.create({
+  await prisma.restroom.create({
     data: {
       id: snowflake,
       ...restroom,
