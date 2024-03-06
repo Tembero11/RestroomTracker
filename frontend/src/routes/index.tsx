@@ -9,7 +9,7 @@ export default function IndexPage() {
 
   return (
     <div style={{height: "100vh"}}>
-      <MapView />
+      <MapView loadGeoJSON />
       <div className={styles["map-top-overlay"]}>
         <input type="search" />
         {auth.status == AuthStatus.authenticated ? (
