@@ -25,7 +25,13 @@ export async function getSingleController(req: Request, res: Response) {
       return;
     }
 
-    res.status(200).json({...restroom, id: restroom.id.toString()});
+    res
+      .status(200)
+      .json({
+        ...restroom,
+        id: restroom.id.toString(),
+        fee: restroom.fee?.toNumber(),
+      });
   } catch (err) {
     console.log(err)
     res.status(500).json({ msg: "Internal Server Error" });
