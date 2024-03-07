@@ -13,10 +13,6 @@ export default function IndexPage() {
   const [gpsFailAlertOpen, setGpsFailAlertOpen] = useState(false);
   const map = useRef<mapboxgl.Map | null>(null);
   const locationWatchId = useRef<number | null>(null);
-  const [userLocation, setUserLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
   const auth = useAuth();
 
   function handleGpsFailAlertClose() {
