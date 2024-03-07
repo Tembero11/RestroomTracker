@@ -2,11 +2,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "../styles/routes/new.module.scss";
 import { z } from "zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import MapView from "../components/MapView/MapView";
-import { Alert, Button, Checkbox, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import {
+  Alert,
+  Box,
+  Button,
+  Checkbox,
+  Fab,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  Snackbar,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Accessible, Add, LocationSearching } from "@mui/icons-material";
 import { Sex } from "../requests/restroom";
+import { locateUser } from "../components/util/gpsUtils";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long.").max(32),
@@ -27,9 +44,13 @@ const schema = z.object({
 type ValidationSchemaType = z.infer<typeof schema>;
 
 export default function NewPage() {
+  const [gpsFailAlertOpen, setGpsFailAlertOpen] = useState(false);
+  const map = useRef<mapboxgl.Map | null>(null);
+  const locationWatchId = useRef<number | null>(null);
+
   const [isSubmitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const [coords, setCoords] = useState<{lat: number, lng: number}>();
+  const [coords, setCoords] = useState<{ lat: number; lng: number }>();
 
   const {
     register,
@@ -49,7 +70,7 @@ export default function NewPage() {
       },
       body: JSON.stringify({
         ...data,
-        ...coords
+        ...coords,
       }),
     })
       .catch((err) => {
@@ -61,45 +82,102 @@ export default function NewPage() {
       });
   };
 
+  function handleGpsFailAlertClose() {
+    setGpsFailAlertOpen(false);
+  }
+
   console.log(errors);
   return (
-    <div className={styles.container}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className={styles["form-container"]}
+    <>
+      <Snackbar
+        open={gpsFailAlertOpen}
+        autoHideDuration={6000}
+        onClose={handleGpsFailAlertClose}
       >
-        <TextField type="text" label="Restroom Name" {...register("name")} />
-        {errors.name && <span>{errors.name!.message}</span>}
-        <TextField type="number" label="Fee" {...register("fee")} />
-        {errors.fee && <Alert severity="error">{errors.fee.message}</Alert>}
-        <label>
-          <span>Is this restroom accessible?</span>
-          <input type="checkbox" {...register("accessible")} />
-        </label>
-        <Checkbox/>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Sex"
-            {...register("sex")}
+        <Alert
+          onClose={handleGpsFailAlertClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Failed to locate.
+        </Alert>
+      </Snackbar>
+      <Stack direction="row" height="100vh">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={styles["form-container"]}
+          style={{ flex: 1, padding: "16px" }}
+        >
+          <Stack gap="8px">
+            <Typography variant="h6" mb="8px">
+              Create Restroom
+            </Typography>
+            <TextField
+              type="text"
+              label="Restroom Name"
+              {...register("name")}
+            />
+            {errors.name && (
+              <Alert severity="error">{errors.name.message}</Alert>
+            )}
+            <TextField type="number" label="Fee" {...register("fee")} />
+            {errors.fee && <Alert severity="error">{errors.fee.message}</Alert>}
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Sex</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Sex"
+                {...register("sex")}
+              >
+                <MenuItem value={Sex.Both}>Both</MenuItem>
+                <MenuItem value={Sex.Men}>Men</MenuItem>
+                <MenuItem value={Sex.Women}>Women</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField type="text" label="Code" {...register("code")} />
+            {errors.code && (
+              <Alert severity="error">{errors.code.message}</Alert>
+            )}
+            <TextField
+              multiline
+              label="Notes"
+              {...register("notes")}
+            ></TextField>
+            {errors.notes && (
+              <Alert severity="error">{errors.notes.message}</Alert>
+            )}
+            <FormControlLabel
+              control={<Checkbox defaultChecked {...register("accessible")} />}
+              label="Wheelchair Accessible"
+            />
+          </Stack>
+          <Button type="submit" variant="contained">
+            <Add />
+            Create
+          </Button>
+        </form>
+        <Box className={styles["map-container"]} flex={1}>
+          <MapView
+            onLoad={(result) => (map.current = result)}
+            onMove={(lat, lng) => setCoords({ lat, lng })}
+          />
+          <Fab
+            style={{ position: "absolute", bottom: 36, right: 16 }}
+            onClick={() =>
+              (locationWatchId.current = locateUser(
+                map.current!,
+                locationWatchId.current,
+                () => setGpsFailAlertOpen(true)
+              ))
+            }
           >
-            <MenuItem value={Sex.Both}>Both</MenuItem>
-            <MenuItem value={Sex.Men}>Men</MenuItem>
-            <MenuItem value={Sex.Women}>Women</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField type="text" label="Code" {...register("code")} />
-        {errors.code && <Alert severity="error">{errors.code.message}</Alert>}
-        <TextField multiline label="Notes" {...register("notes")}></TextField>
-        {errors.notes && <Alert severity="error">{errors.notes.message}</Alert>}
-        <Button type="submit" variant="contained"><Add/>Create</Button>
-      </form>
-      <div className={styles["map-container"]}>
-        <MapView onMove={(lat, lng) => setCoords({lat, lng})}/>
-        <div className={styles["center-marker"]}></div>
-      </div>
-    </div>
+            <LocationSearching />
+          </Fab>
+          <div className={styles["center-marker"]}></div>
+        </Box>
+      </Stack>
+    </>
   );
 }
