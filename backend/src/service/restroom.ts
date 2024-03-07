@@ -20,6 +20,9 @@ export async function createRestroom(restroom: Omit<Restroom, "id" | "lat" | "ln
 export async function getRestrooms() {
   return await prisma.restroom.findMany();
 }
+export async function getRestroomById(id: bigint) {
+  return await prisma.restroom.findFirst({where: {id}});
+}
 
 export function restroomsToGeoJson(restrooms: Restroom[]): object {
   const features = restrooms.map((restroom) => {

@@ -1,14 +1,31 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import { postSchema } from "../schema/restroom";
-import { createRestroom, getRestrooms, restroomsToGeoJson } from "../service/restroom";
+import { createRestroom, getRestroomById, getRestrooms, restroomsToGeoJson } from "../service/restroom";
 import { Decimal } from "@prisma/client/runtime/library";
 
-export async function getController(req: Request, res: Response) {
+export async function getGeoJsonController(req: Request, res: Response) {
   try {
     const restrooms = await getRestrooms();
 
     res.status(200).json(restroomsToGeoJson(restrooms));
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: "Internal Server Error" });
+    return;
+  }
+}
+
+export async function getSingleController(req: Request, res: Response) {
+  try {
+    const restroom = await getRestroomById(BigInt(req.params.id as string));
+
+    if (!restroom) {
+      res.status(404).send();
+      return;
+    }
+
+    res.status(200).json({...restroom, id: restroom.id.toString()});
   } catch (err) {
     console.log(err)
     res.status(500).json({ msg: "Internal Server Error" });
