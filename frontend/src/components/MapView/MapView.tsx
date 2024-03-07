@@ -8,9 +8,10 @@ interface IProps {
   loadGeoJSON?: boolean;
   updateQueryParams?: boolean;
   onMove?: (centerLat: number, centerLng: number) => void;
+  onLoad?: (map: mapboxgl.Map) => void;
 }
 
-export default function MapView({ loadGeoJSON, updateQueryParams, onMove }: IProps) {
+export default function MapView({ loadGeoJSON, updateQueryParams, onMove, onLoad }: IProps) {
   const token = (import.meta as any).env.VITE_MAPBOX_ACCESS_TOKEN;
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,6 +54,8 @@ export default function MapView({ loadGeoJSON, updateQueryParams, onMove }: IPro
     });
 
     map.current.on("load", () => {
+      if (onLoad) onLoad(map.current!);
+
       if (!loadGeoJSON) return;
 
       map.current!.addSource("restrooms", {
