@@ -6,12 +6,7 @@ import { useState } from "react";
 import MapView from "../components/MapView/MapView";
 import { Alert, Button, Checkbox, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
-
-enum Sex {
-  Men = "MEN",
-  Women = "WOMAN",
-  Both = "BOTH",
-}
+import { Sex } from "../requests/restroom";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long.").max(32),

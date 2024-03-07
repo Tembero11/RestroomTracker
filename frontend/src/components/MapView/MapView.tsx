@@ -9,9 +9,10 @@ interface IProps {
   updateQueryParams?: boolean;
   onMove?: (centerLat: number, centerLng: number) => void;
   onLoad?: (map: mapboxgl.Map) => void;
+  onRestroomClicked?: (id: bigint) => void;
 }
 
-export default function MapView({ loadGeoJSON, updateQueryParams, onMove, onLoad }: IProps) {
+export default function MapView({ loadGeoJSON, updateQueryParams, onMove, onLoad, onRestroomClicked }: IProps) {
   const token = (import.meta as any).env.VITE_MAPBOX_ACCESS_TOKEN;
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -60,7 +61,7 @@ export default function MapView({ loadGeoJSON, updateQueryParams, onMove, onLoad
 
       map.current!.addSource("restrooms", {
         type: "geojson",
-        data: "/api/restroom",
+        data: "/api/restroom.geojson",
       });
       map.current!.addLayer({
         id: "restrooms-layer",
@@ -74,6 +75,14 @@ export default function MapView({ loadGeoJSON, updateQueryParams, onMove, onLoad
         },
       });
     });
+    map.current.on("click", "restrooms-layer", (e) => {
+      if (!e.features) return;
+      const id = BigInt(e.features[0].properties!.id);
+
+      if (onRestroomClicked) {
+        onRestroomClicked(id);
+      }
+    })
   });
 
   return (
