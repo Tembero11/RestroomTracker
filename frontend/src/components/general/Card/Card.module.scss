@@ -1,0 +1,10 @@
+@use "../../../styles/theme.scss";
+
+.card {
+    background-color: theme.$surface;
+    color: theme.$on-surface;
+    padding: 16px;
+    border-radius: 12px;
+    box-sizing: border-box;
+    box-shadow: 1px 4px 7px rgba(0, 0, 0, 0.1);
+}
