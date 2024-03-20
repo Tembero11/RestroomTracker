@@ -1,0 +1,40 @@
+@use "../../../styles/theme.scss";
+
+@mixin button-common-styles {
+    @include theme.font-label-large();
+    padding: 0 32px;
+    height: 52px;
+    border-radius: 100px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+
+@mixin button-hover-effect {
+    transform: translateY(-2px);
+}
+
+.button-primary {
+    @include button-common-styles();
+    background-color: theme.$primary;
+    color: theme.$on-primary;
+
+    transition: 200ms transform, 200ms box-shadow;
+    &:hover {
+        @include button-hover-effect();
+        box-shadow: 0 5px 5px rgba(theme.$primary, 0.3);
+    }
+}
+
+.button-secondary {
+    @include button-common-styles();
+    background-color: transparent;
+    color: theme.$on-background;
+    border: 1px solid theme.$outline;
+
+
+    transition: 200ms transform;
+    &:hover {
+        @include button-hover-effect();
+    }
+}
