@@ -14,8 +14,7 @@ interface IProps
   h?: React.CSSProperties["height"];
 }
 
-export function Stack(props: IProps) {
-  const { children, gap, justify, alignItems, dir, w, h } = props;
+export function Stack({dir, gap, children, justify, alignItems, w, h, ...props}: IProps) {
   return (
     <div
       className={styles["stack"]}
