@@ -18,16 +18,32 @@
 }
 
 .input-text {
-    @include theme.font-label-small();
     @include input-styles();
+    @include theme.font-label-small();
     border: 1px solid theme.$outline;
     border-radius: 12px;
 }
 
 .input-search {
     @include input-styles();
+    @include theme.font-label-small();
     border-radius: 100px;
     box-shadow: 0 5px 5px rgba(black, 0.3);
+}
+
+.input-number {
+    @include input-styles();
+    @include theme.font-label-small();
+    border: 1px solid theme.$outline;
+    border-radius: 12px;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    -moz-appearance: textfield; // Firefox
 }
 
 .label-span {
