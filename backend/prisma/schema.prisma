@@ -19,23 +19,24 @@ enum OAuthService {
 }
 
 model User {
-  id BigInt @id
-  services UserService[]
-  username String
-  email String @unique
-  isComplete Boolean @default(false)
-  lastLogin DateTime @default(now())
+  id         BigInt        @id
+  services   UserService[]
+  username   String
+  email      String        @unique
+  isComplete Boolean       @default(false)
+  lastLogin  DateTime      @default(now())
+  restrooms   Restroom[]
 }
 
 model UserService {
-  id BigInt @id
-  service OAuthService
+  id           BigInt       @id
+  service      OAuthService
   refreshToken String
-  user User @relation(fields: [id], references: [id])
+  user         User         @relation(fields: [id], references: [id])
 }
 
 model Restroom {
-  id         BigInt @id
+  id         BigInt   @id
   name       String
   fee        Decimal?
   sex        Sex
@@ -43,8 +44,11 @@ model Restroom {
   code       String?
   notes      String
 
-  lat       Decimal
-  lng       Decimal
+  lat      Decimal
+  lng      Decimal
+  authorId BigInt
+  author   User    @relation(fields: [authorId], references: [id])
+
   @@map("restrooms")
 }
 
