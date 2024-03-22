@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 import { z } from "zod";
 import { postSchema } from "../schema/restroom";
-import { createRestroom, getRestroomById, getRestrooms, restroomsToGeoJson } from "../service/restroom";
+import {
+  createRestroom,
+  getRestroomById,
+  getRestrooms,
+  restroomsToGeoJson,
+} from "../service/restroom";
 import { Decimal } from "@prisma/client/runtime/library";
 
 export async function getGeoJsonController(req: Request, res: Response) {
@@ -10,7 +15,7 @@ export async function getGeoJsonController(req: Request, res: Response) {
 
     res.status(200).json(restroomsToGeoJson(restrooms));
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).json({ msg: "Internal Server Error" });
     return;
   }
@@ -18,22 +23,25 @@ export async function getGeoJsonController(req: Request, res: Response) {
 
 export async function getSingleController(req: Request, res: Response) {
   try {
-    const restroom = await getRestroomById(BigInt(req.params.id as string));
+    const userId = req.context?.id;
 
-    if (!restroom) {
+    const dbResult = await getRestroomById(BigInt(req.params.id as string));
+
+    if (!dbResult) {
       res.status(404).send();
       return;
     }
 
-    res
-      .status(200)
-      .json({
-        ...restroom,
-        id: restroom.id.toString(),
-        fee: restroom.fee?.toNumber(),
-      });
+    const { id, fee, authorId, ...restroom } = dbResult;
+
+    res.status(200).json({
+      ...restroom,
+      id: id.toString(),
+      fee: fee?.toNumber(),
+      isCreatedByYou: userId === authorId,
+    });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).json({ msg: "Internal Server Error" });
     return;
   }
@@ -52,6 +60,7 @@ export async function postController(req: Request, res: Response) {
         accessible,
         code,
         notes,
+        authorId: req.context.id,
       },
       lat,
       lng
