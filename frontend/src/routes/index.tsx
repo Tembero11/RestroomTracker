@@ -3,12 +3,16 @@ import MapView from "../components/MapView/MapView";
 import { AuthStatus } from "../contexts/AuthContext/AuthContext";
 import useAuth from "../hooks/useAuth";
 import styles from "../styles/routes/index.module.scss";
-import { Alert, Button, Drawer, Fab, Snackbar } from "@mui/material";
+import { Alert, Fab, Snackbar } from "@mui/material";
 import { Add, LocationSearching } from "@mui/icons-material";
 import { useRef, useState } from "react";
 import mapboxgl, { GeoJSONSource } from "mapbox-gl";
 import { locateUser } from "../components/util/gpsUtils";
 import RestroomDrawer from "../components/RestroomDrawer/RestroomDrawer";
+import Button from "../components/general/Button/Button";
+import TextField from "../components/general/TextField/TextField";
+import ChipRow from "../components/general/Chip/ChipRow";
+import Chip from "../components/general/Chip/Chip";
 
 export default function IndexPage() {
   const [gpsFailAlertOpen, setGpsFailAlertOpen] = useState(false);
@@ -44,12 +48,20 @@ export default function IndexPage() {
         onRestroomClicked={id => setSelectedRestroomId(id)}
       />
       <div className={styles["map-top-overlay"]}>
-        <input type="search" data-variant="elevated" />
+        <TextField type="search" label="Search"/>
+        <ChipRow>
+          <Chip label="Men"/>
+          <Chip label="Women"/>
+          <Chip label="Both"/>
+          <Chip label="Free"/>
+        </ChipRow>
         {auth.status == AuthStatus.authenticated ? (
-          <></>
+          <Link to="/new">
+            <Button isFloating>Add Restroom</Button>
+          </Link>
         ) : (
           <Link to="/login">
-            <Button>Login</Button>
+            <Button isFloating>Login</Button>
           </Link>
         )}
       </div>
@@ -67,12 +79,6 @@ export default function IndexPage() {
         >
           <LocationSearching />
         </Fab>
-        <Link to="/new">
-          <Fab variant="extended">
-            <Add />
-            Add Restroom
-          </Fab>
-        </Link>
       </div>
     </div>
   );
