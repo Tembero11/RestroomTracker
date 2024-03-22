@@ -7,23 +7,24 @@ import MapView from "../components/MapView/MapView";
 import {
   Alert,
   Box,
-  Button,
   Checkbox,
   Fab,
   FormControl,
   FormControlLabel,
-  FormLabel,
   InputLabel,
   MenuItem,
   Select,
   Snackbar,
-  Stack,
-  TextField,
   Typography,
 } from "@mui/material";
-import { Accessible, Add, LocationSearching } from "@mui/icons-material";
+import { Add, LocationSearching } from "@mui/icons-material";
 import { Sex } from "../requests/restroom";
 import { locateUser } from "../components/util/gpsUtils";
+import { HStack, VStack } from "../components/general/Stack/Stack";
+import TextField from "../components/general/TextField/TextField";
+import Button from "../components/general/Button/Button";
+import useSnackBar from "../hooks/useSnackBar";
+import { useNavigate } from "react-router-dom";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long.").max(32),
@@ -36,9 +37,6 @@ const schema = z.object({
     .nullable(),
   accessible: z.boolean().nullable(),
   notes: z.string(),
-
-  // lat: z.number(),
-  // lng: z.number(),
 });
 
 type ValidationSchemaType = z.infer<typeof schema>;
@@ -47,6 +45,8 @@ export default function NewPage() {
   const [gpsFailAlertOpen, setGpsFailAlertOpen] = useState(false);
   const map = useRef<mapboxgl.Map | null>(null);
   const locationWatchId = useRef<number | null>(null);
+  const {showSnackBar} = useSnackBar();
+  const navigate = useNavigate();
 
   const [isSubmitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -76,6 +76,10 @@ export default function NewPage() {
       .catch((err) => {
         console.log(err);
         setSubmitError("Something went wrong");
+        showSnackBar({label: "Something went wrong creating a restroom."});
+      }).then(() => {
+        showSnackBar({label: "Restroom successfully created."});
+        navigate("/");
       })
       .finally(() => {
         setSubmitting(false);
@@ -86,7 +90,6 @@ export default function NewPage() {
     setGpsFailAlertOpen(false);
   }
 
-  console.log(errors);
   return (
     <>
       <Snackbar
@@ -103,61 +106,58 @@ export default function NewPage() {
           Failed to locate.
         </Alert>
       </Snackbar>
-      <Stack direction="row" height="100vh">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={styles["form-container"]}
-          style={{ flex: 1, padding: "16px" }}
-        >
-          <Stack gap="8px">
-            <Typography variant="h6" mb="8px">
-              Create Restroom
-            </Typography>
-            <TextField
-              type="text"
-              label="Restroom Name"
-              {...register("name")}
-            />
-            {errors.name && (
-              <Alert severity="error">{errors.name.message}</Alert>
-            )}
-            <TextField type="number" label="Fee" {...register("fee")} />
-            {errors.fee && <Alert severity="error">{errors.fee.message}</Alert>}
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Sex</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Sex"
-                {...register("sex")}
-              >
-                <MenuItem value={Sex.Both}>Both</MenuItem>
-                <MenuItem value={Sex.Men}>Men</MenuItem>
-                <MenuItem value={Sex.Women}>Women</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField type="text" label="Code" {...register("code")} />
-            {errors.code && (
-              <Alert severity="error">{errors.code.message}</Alert>
-            )}
-            <TextField
-              multiline
-              label="Notes"
-              {...register("notes")}
-            ></TextField>
-            {errors.notes && (
-              <Alert severity="error">{errors.notes.message}</Alert>
-            )}
-            <FormControlLabel
-              control={<Checkbox defaultChecked {...register("accessible")} />}
-              label="Wheelchair Accessible"
-            />
-          </Stack>
-          <Button type="submit" variant="contained">
-            <Add />
-            Create
-          </Button>
-        </form>
+      <HStack h="100vh" justify="stretch" alignItems="stretch">
+        <div style={{flex: 1}}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={styles["form-container"]}
+          >
+            <VStack gap="16px">
+              <Typography variant="h6" mb="8px">
+                Create Restroom
+              </Typography>
+              <TextField
+                type="text"
+                label="Restroom Name"
+                {...register("name")}
+              />
+              {errors.name && (
+                <Alert severity="error">{errors.name.message}</Alert>
+              )}
+              <TextField type="number" label="Fee" {...register("fee")} step=".01" />
+              {errors.fee && (
+                <Alert severity="error">{errors.fee.message}</Alert>
+              )}
+              <FormControl fullWidth>
+                <InputLabel>Sex</InputLabel>
+                <Select
+                  label="Sex"
+                  value={Sex.Both}
+                  {...register("sex")}
+                >
+                  <MenuItem value={Sex.Both}>Both</MenuItem>
+                  <MenuItem value={Sex.Men}>Men</MenuItem>
+                  <MenuItem value={Sex.Women}>Women</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField type="text" label="Code" {...register("code")} />
+              {errors.code && (
+                <Alert severity="error">{errors.code.message}</Alert>
+              )}
+              <TextField label="Notes" {...register("notes")}></TextField>
+              {errors.notes && (
+                <Alert severity="error">{errors.notes.message}</Alert>
+              )}
+              <FormControlLabel
+                control={
+                  <Checkbox defaultChecked {...register("accessible")} />
+                }
+                label="Wheelchair Accessible"
+              />
+            </VStack>
+            <Button type="submit">Create</Button>
+          </form>
+        </div>
         <Box className={styles["map-container"]} flex={1}>
           <MapView
             onLoad={(result) => (map.current = result)}
@@ -177,7 +177,7 @@ export default function NewPage() {
           </Fab>
           <div className={styles["center-marker"]}></div>
         </Box>
-      </Stack>
+      </HStack>
     </>
   );
 }
