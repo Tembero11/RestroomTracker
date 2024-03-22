@@ -14,11 +14,29 @@ interface IProps
   h?: React.CSSProperties["height"];
 }
 
-export function Stack({dir, gap, children, justify, alignItems, w, h, ...props}: IProps) {
+export function Stack({
+  dir,
+  gap,
+  children,
+  justify,
+  alignItems,
+  w,
+  h,
+  style,
+  ...props
+}: IProps) {
   return (
     <div
       className={styles["stack"]}
-      style={{ gap, justifyContent: justify, alignItems, flexDirection: dir, width: w, height: h }}
+      style={{
+        gap,
+        justifyContent: justify,
+        alignItems,
+        flexDirection: dir,
+        width: w,
+        height: h,
+        ...style
+      }}
       {...props}
     >
       {children}
@@ -26,13 +44,41 @@ export function Stack({dir, gap, children, justify, alignItems, w, h, ...props}:
   );
 }
 
-export function HStack(props: Omit<IProps, "dir">) {
-  return <Stack dir="row" {...props}/>;
+export function HStack({
+  fullWidth,
+  ...props
+}: Omit<IProps, "dir"> & { fullWidth?: boolean }) {
+  return (
+    <Stack
+      dir="row"
+      {...props}
+      w={fullWidth ? "100%" : props.w}
+    />
+  );
 }
-export function VStack(props: Omit<IProps, "dir">) {
-  return <Stack dir="column" {...props}/>;
+export function VStack({
+  fullHeight,
+  style,
+  ...props
+}: Omit<IProps, "dir"> & { fullHeight?: boolean }) {
+  return (
+    <Stack
+      dir="column"
+      {...props}
+      h={fullHeight ? "100%" : props.w}
+    />
+  );
 }
 
 export function Center(props: Omit<IProps, "dir">) {
-  return <Stack dir="column" justify="center" alignItems="center" w="100%" h="100%" {...props}/>;
+  return (
+    <Stack
+      dir="column"
+      justify="center"
+      alignItems="center"
+      w="100%"
+      h="100%"
+      {...props}
+    />
+  );
 }
