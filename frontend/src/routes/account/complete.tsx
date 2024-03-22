@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { completeProfile } from "../../requests/user";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import TextField from "../../components/general/TextField/TextField";
+import { Center, HStack } from "../../components/general/Stack/Stack";
+import Card from "../../components/general/Card/Card";
+import Button from "../../components/general/Button/Button";
 
 export function CompleteAccountPage() {
   const [username, setUsername] = useState("");
@@ -18,16 +22,21 @@ export function CompleteAccountPage() {
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <label>
-        <span>Username</span>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </label>
-      <button type="submit">Finish</button>
-    </form>
+    <Center h="100vh">
+      <Card>
+        <form onSubmit={onSubmit}>
+          <h1>Set Username</h1>
+          <HStack gap={8}>
+            <TextField
+              label="Username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <Button type="submit">Finish</Button>
+          </HStack>
+        </form>
+      </Card>
+    </Center>
   );
 }
