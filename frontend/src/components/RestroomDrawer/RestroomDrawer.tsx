@@ -1,8 +1,10 @@
-import { Chip, CircularProgress, Drawer, Grid, Stack, Typography } from "@mui/material";
+import { Chip, CircularProgress, Typography } from "@mui/material";
 import useApi from "../../hooks/useApi";
 import { Sex, getRestroomById } from "../../requests/restroom";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import Drawer from "../general/Drawer/Drawer";
+import { HStack, Stack, VStack } from "../general/Stack/Stack";
 
 export default function RestroomDrawer({
   id,
@@ -13,15 +15,12 @@ export default function RestroomDrawer({
 }) {
   const [data, error, loading, reFetch] = useApi(getRestroomById, id);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
   useEffect(() => {
     if (!id) return;
 
     reFetch();
     const urlSearchParams = new URLSearchParams();
     urlSearchParams.set("restroom", id.toString());
-    setSearchParams(urlSearchParams);
   }, [id]);
 
 
@@ -44,27 +43,25 @@ export default function RestroomDrawer({
   }
   console.log(data)
   return (
-    <Drawer anchor={"left"} open={id != null} onClose={() => {
-      // Clear the id from the url bar
-      setSearchParams(new URLSearchParams());
+    <Drawer isOpen={id != null} onClose={() => {
       onClose();
     }}>
       {
         loading ? <CircularProgress/> : (
-          <Stack padding="16px" gap="8px" maxWidth="400px">
+          <VStack gap="8px">
             <Typography variant="h4">{data?.name}</Typography>
-            <Stack direction="row" gap="8px">
+            <HStack gap="8px">
               {sexChips()}
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
+            </HStack>
+            <HStack justify="space-between">
               <Typography>Fee</Typography>
               <Typography>{data?.fee?.toFixed(2)}€</Typography>
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
+            </HStack>
+            <HStack justify="space-between">
               <Typography>Accessible</Typography>
-            </Stack>
+            </HStack>
             <Typography variant="body1">{data?.notes}</Typography>
-          </Stack>
+          </VStack>
         )
       }
     </Drawer>
