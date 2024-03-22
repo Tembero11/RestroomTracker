@@ -14,6 +14,7 @@ export interface IRestroom {
   notes: string;
   lat: number;
   lng: number;
+  isCreatedByYou: boolean;
 }
 
 type IRawRestroom = IRestroom & { id: string };

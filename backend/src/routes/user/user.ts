@@ -15,15 +15,15 @@ export const route = "/user";
 const router = Router();
 
 export function registerRoutes(app: Express) {
-  router.get(route, verifyAuth, getController);
-  router.post(route, verifyAuth, postController);
+  router.get(route, verifyAuth(), getController);
+  router.post(route, verifyAuth(), postController);
   router.patch(
     route,
-    verifyAuth,
+    verifyAuth(),
     validate(patchSchema),
     expressAsyncHandler(patchController)
   );
-  router.delete(route, verifyAuth, deleteController);
+  router.delete(route, verifyAuth(), deleteController);
 
   app.use(router);
 }

@@ -18,9 +18,9 @@ const router = Router();
 export function registerRoutes(app: Express) {
   router.get(`${route}.geojson`, expressAsyncHandler(getGeoJsonController));
   router.get(`${route}/:id`, expressAsyncHandler(getSingleController));
-  router.post(route, verifyAuth, validate(postSchema), expressAsyncHandler(postController));
-  router.patch(route, verifyAuth, patchController);
-  router.delete(route, verifyAuth, deleteController);
+  router.post(route, verifyAuth(), validate(postSchema), expressAsyncHandler(postController));
+  router.patch(route, verifyAuth(), patchController);
+  router.delete(route, verifyAuth(), deleteController);
 
   app.use(router);
 }
