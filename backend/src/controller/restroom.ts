@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import { postSchema } from "../schema/restroom";
+import { patchSchema, postSchema } from "../schema/restroom";
 import {
   createRestroom,
   getRestroomById,
@@ -8,6 +8,7 @@ import {
   restroomsToGeoJson,
 } from "../service/restroom";
 import { Decimal } from "@prisma/client/runtime/library";
+import { prisma } from "..";
 
 export async function getGeoJsonController(req: Request, res: Response) {
   try {
@@ -74,6 +75,20 @@ export async function postController(req: Request, res: Response) {
   }
 }
 
-export function patchController(req: Request, res: Response) {}
+export async function patchController(req: Request, res: Response) {
+  const body = req.body as z.infer<typeof patchSchema.body>;
+  const id = req.params["id"] as string;
+
+  try {
+    await prisma.restroom.update({
+      where: { id: BigInt(id) },
+      data: body,
+    });
+
+    res.status(200).json({ msg: "Updated successfully." })
+  } catch (err) {
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+}
 
 export function deleteController(req: Request, res: Response) {}

@@ -37,6 +37,7 @@ function verifyAuth({ requireLogin }: IOptions = { requireLogin: true }) {
         next();
         return;
       } catch (err) {
+        console.log(token);
         console.log(err);
       }
 
