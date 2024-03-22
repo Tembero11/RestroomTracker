@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { $Enums, Restroom } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { genSnowflake } from "../src/util/snowflake";
+import crypto from "crypto";
 import { prisma } from "../src";
 
 const cities = [
@@ -36,9 +37,9 @@ function randomLocation(lat: number, lng: number, radius: number) {
     // Resulting point.
     return [y+y0, xp+x0];
   }
- 
 
-async function generateRestrooms() {
+
+async function generateRestrooms(authorId: bigint) {
   const result: Restroom[] = [];
 
   for (const city of cities) {
@@ -58,6 +59,8 @@ async function generateRestrooms() {
 
         lat: new Decimal(lat),
         lng: new Decimal(lng),
+
+        authorId,
       });
     }
   }
@@ -69,4 +72,32 @@ async function generateRestrooms() {
   console.log("Done!");
 }
 
-generateRestrooms();
+async function createAdmin() {
+  const userId = genSnowflake();
+
+  console.log("Creating ADMIN user...");
+  await prisma.user.create({
+    data: {
+      id: userId,
+      username: "ADMIN",
+      email: "admin@restroomtracker.com",
+      services: {
+        create: {
+          // This is not functional just used to fill the db
+          refreshToken: crypto.randomBytes(20).toString('hex'),
+          service: "DISCORD",
+        }
+      }
+    }
+  });
+
+  return userId;
+}
+
+async function seedUp() {
+  const adminId = await createAdmin();
+
+  await generateRestrooms(adminId);
+}
+
+seedUp();
