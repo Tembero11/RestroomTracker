@@ -6,6 +6,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import Drawer from "../general/Drawer/Drawer";
 import { HStack, VStack } from "../general/Stack/Stack";
 import Button from "../general/Button/Button";
+import Card from "../general/Card/Card";
 
 export default function RestroomDrawer({
   id,
@@ -41,7 +42,7 @@ export default function RestroomDrawer({
         return <></>;
     }
   }
-  console.log(data);
+  
   return (
     <Drawer
       isOpen={id != null}
@@ -56,14 +57,33 @@ export default function RestroomDrawer({
           <VStack gap="8px">
             <Typography variant="h4">{data?.name}</Typography>
             <HStack gap="8px">{sexChips()}</HStack>
-            <HStack justify="space-between">
-              <Typography>Fee</Typography>
-              <Typography>{data?.fee?.toFixed(2)}€</Typography>
-            </HStack>
-            <HStack justify="space-between">
-              <Typography>Accessible</Typography>
-            </HStack>
-            <Typography variant="body1">{data?.notes}</Typography>
+            <Card style={{ width: "100%" }}>
+              <Typography mt="8px" variant="h6">
+                Overview
+              </Typography>
+              <HStack justify="space-between">
+                <Typography>Fee</Typography>
+                <Typography>{data?.fee?.toFixed(2)}€</Typography>
+              </HStack>
+              <HStack justify="space-between">
+                <Typography>Accessible</Typography>
+                <Typography>{data?.accessible ? "yes" : "no"}</Typography>
+              </HStack>
+              <HStack justify="space-between">
+                <Typography>Code</Typography>
+                <Typography>{data?.code}</Typography>
+              </HStack>
+            </Card>
+            {data?.notes ? (
+              <Card style={{ width: "100%" }}>
+                <Typography mt="8px" variant="h6">
+                  Notes
+                </Typography>
+                <Typography variant="body1">{data?.notes}</Typography>
+              </Card>
+            ) : (
+              <></>
+            )}
           </VStack>
           {data?.isCreatedByYou ? (
             <VStack gap="8px" alignItems="stretch">
