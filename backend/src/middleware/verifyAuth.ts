@@ -17,6 +17,7 @@ function verifyAuth({ requireLogin }: IOptions = { requireLogin: true }) {
         }else {
           next();
         }
+        return;
       }
 
       const token = bearer.substring("Bearer ".length);
