@@ -1,6 +1,6 @@
 export enum Sex {
   Men = "MEN",
-  Women = "WOMAN",
+  Women = "WOMEN",
   Both = "BOTH",
 }
 
