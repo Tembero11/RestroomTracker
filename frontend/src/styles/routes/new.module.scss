@@ -12,8 +12,10 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
+    box-sizing: border-box;
+    flex: 1;
+    padding: 16px;
     gap: 8px;
-    width: 70%;
 }
 
 .map-container {
