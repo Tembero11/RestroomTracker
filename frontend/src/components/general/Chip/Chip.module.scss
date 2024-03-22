@@ -1,0 +1,50 @@
+@use "../../../styles/theme.scss";
+
+.container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    input[type=checkbox] {
+        cursor: pointer;
+        position: absolute;
+        opacity: 0;
+    }
+}
+
+.chip {
+    @include theme.font-label-small();
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 16px;
+    border-radius: 100px;
+    cursor: pointer;
+
+    background-color: theme.$surface;
+    &[data-checked=true] {
+        background-color: theme.$primary;
+        color: theme.$on-primary;
+    }
+
+    user-select: none;
+}
+
+.leading {
+    width: 18px;
+    height: 18px;
+}
+
+.chip-row {
+    height: 48px;
+    overflow-y: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    .container {
+        margin-right: 8px;
+    }
+}
