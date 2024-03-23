@@ -32,9 +32,9 @@ export function registerRoutes(app: Express) {
     `${route}/:id`,
     verifyAuth({ requireLogin: true }),
     validate(patchSchema),
-    patchController
+    expressAsyncHandler(patchController)
   );
-  router.delete(route, verifyAuth({ requireLogin: true }), deleteController);
+  router.delete(`${route}/:id`, verifyAuth({ requireLogin: true }), expressAsyncHandler(deleteController));
 
   app.use(router);
 }
