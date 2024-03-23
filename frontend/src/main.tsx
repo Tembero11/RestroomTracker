@@ -18,6 +18,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { SnackBarProvider } from "./contexts/SnackBarContext/SnackBarContext";
+import EditPage from "./routes/edit";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
         element: (
           <Private>
             <NewPage />
+          </Private>
+        ),
+      },
+      {
+        path: "/edit/:id",
+        element: (
+          <Private>
+            <EditPage />
           </Private>
         ),
       },
