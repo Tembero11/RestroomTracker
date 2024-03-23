@@ -88,6 +88,9 @@ export default function RestroomDrawer({
           {data?.isCreatedByYou ? (
             <VStack gap="8px" alignItems="stretch">
               <Typography>This restroom was created by you.</Typography>
+              <Link to={`/delete-confirm/${id}`}>
+                <Button fullWidth variant="secondary">Delete</Button>
+              </Link>
               <Link to={`/edit/${id}`}>
                 <Button fullWidth>Edit</Button>
               </Link>
