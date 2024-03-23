@@ -14,11 +14,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Sex, getRestroomById } from "../requests/restroom";
-import { Center, VStack } from "../components/general/Stack/Stack";
+import { Center, HStack, VStack } from "../components/general/Stack/Stack";
 import TextField from "../components/general/TextField/TextField";
 import Button from "../components/general/Button/Button";
 import useSnackBar from "../hooks/useSnackBar";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useApi from "../hooks/useApi";
 import { useEffect } from "react";
 import Card from "../components/general/Card/Card";
@@ -43,7 +43,7 @@ const schema = z.object({
 type ValidationSchemaType = z.infer<typeof schema>;
 
 export default function EditPage() {
-  let { id } = useParams();
+  const { id } = useParams();
   const [data, error, loading, reFetch] = useApi(getRestroomById, id);
   const { showSnackBar } = useSnackBar();
   const navigate = useNavigate();
@@ -141,7 +141,18 @@ export default function EditPage() {
               label="Wheelchair Accessible"
             />
           </VStack>
-          <Button type="submit">Edit</Button>
+          <HStack justify="stretch" fullWidth>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => navigate("/")}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" style={{ flex: 1 }}>
+              Edit
+            </Button>
+          </HStack>
         </form>
       </Card>
     </Center>
