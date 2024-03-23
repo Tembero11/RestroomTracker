@@ -30,7 +30,6 @@ const TextField = forwardRef<HTMLInputElement, IProps>((props: IProps, ref) => {
       <input
         ref={ref}
         type={props.type}
-        value={props.value || value}
         className={styles[`input-${type}`]}
         {...props}
         onBlur={(e) => {
