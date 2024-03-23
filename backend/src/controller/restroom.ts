@@ -85,10 +85,22 @@ export async function patchController(req: Request, res: Response) {
       data: body,
     });
 
-    res.status(200).json({ msg: "Updated successfully." })
+    res.status(200).json({ msg: "Updated successfully." });
   } catch (err) {
     res.status(500).json({ msg: "Internal Server Error" });
   }
 }
 
-export function deleteController(req: Request, res: Response) {}
+export async function deleteController(req: Request, res: Response) {
+  const id = req.params["id"] as string;
+
+  try {
+    await prisma.restroom.delete({
+      where: { id: BigInt(id) },
+    });
+    res.status(200).json({ msg: "Delete success." });
+    return;
+  } catch (err) {
+    res.status(500).json({ msg: "Internal Server Error" });
+  }
+}
