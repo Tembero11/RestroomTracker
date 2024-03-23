@@ -19,6 +19,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { SnackBarProvider } from "./contexts/SnackBarContext/SnackBarContext";
 import EditPage from "./routes/edit";
+import DeleteConfirmPage from "./routes/delete-confirm";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,14 @@ const router = createBrowserRouter([
         element: (
           <Private>
             <EditPage />
+          </Private>
+        ),
+      },
+      {
+        path: "/delete-confirm/:id",
+        element: (
+          <Private>
+            <DeleteConfirmPage />
           </Private>
         ),
       },
